@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { signUp } from "@/lib/auth-client";
+import { githubSignIn, googleSignIn, signUp } from "@/lib/auth-client";
 
 export default function SignUpPage() {
   const router = useRouter();
@@ -62,6 +62,19 @@ export default function SignUpPage() {
           Create Account
         </button>
       </form>
+      <p className="text-center text-gray-400">or</p>
+      <button
+        onClick={googleSignIn}
+        className="border rounded py-2 px-4 cursor-pointer w-full"
+      >
+        Googleでサインアップ
+      </button>
+      <button
+        onClick={githubSignIn}
+        className="border rounded py-2 px-4 cursor-pointer w-full"
+      >
+        GitHubでサインアップ
+      </button>
     </main>
   );
 }
