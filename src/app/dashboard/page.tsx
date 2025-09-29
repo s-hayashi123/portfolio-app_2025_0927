@@ -19,7 +19,6 @@ export default function DashboardPage() {
   if (!session?.user)
     return <p className="text-center mt-8 text-white">Redirecting...</p>;
 
-  //add-start: destructure user from session
   const { user } = session;
 
   return (
