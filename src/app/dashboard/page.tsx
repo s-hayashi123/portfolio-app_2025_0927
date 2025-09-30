@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useSession, signOut } from "@/lib/auth-client";
 import { useEffect } from "react";
+import { getBookmarks } from "../actions/bookmarks";
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -20,6 +21,8 @@ export default function DashboardPage() {
     return <p className="text-center mt-8 text-white">Redirecting...</p>;
 
   const { user } = session;
+
+  // const bookmarks = await getBookmarks();
 
   return (
     <div>
@@ -51,6 +54,14 @@ export default function DashboardPage() {
 
       <main className="max-w-md flex items-center justify-center flex-col mx-auto p-6 space-y-4 text-white">
         <h2>あなたのBookmark</h2>
+        {/* <ul>
+          {bookmarks?.map((bookmark) => (
+            <li key={bookmark.id}>
+              {bookmark.title}
+              <a href={bookmark.url}>{bookmark.url}</a>
+            </li>
+          ))}
+        </ul> */}
       </main>
     </div>
   );
