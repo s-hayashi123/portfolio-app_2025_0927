@@ -4,7 +4,8 @@ import { auth } from "@/lib/auth";
 import { getBookmarks } from "../actions/bookmarks";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-import { handleSignOut } from "@/lib/auth-client";
+import { Button as ShadcnButton } from "@/components/ui/button";
+import { signOutAction } from "../actions/auth";
 
 export default async function DashboardPage() {
   const session = await auth.api.getSession({ headers: await headers() });
@@ -14,7 +15,7 @@ export default async function DashboardPage() {
   const bookmarks = await getBookmarks();
 
   return (
-    <div>
+    <div className="">
       <header className="bg-neutral-900 border-b border-neutral-700 px-6 py-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-4">
@@ -31,15 +32,21 @@ export default async function DashboardPage() {
             <div className="hidden sm:block text-sm text-gray-400">
               {user.email}
             </div>
-            <button className="bg-white text-black font-medium rounded-lg px-4 py-2 hover:bg-gray-300 transition-colors duration-200 text-sm cursor-pointer">
-              Sign Out
-            </button>
+            <form action={signOutAction}>
+              <ShadcnButton
+                type="submit"
+                className="bg-white text-gray-700 hover:bg-gray-300 cursor-pointer"
+              >
+                Sign Out
+              </ShadcnButton>
+            </form>
           </div>
         </div>
       </header>
 
-      <main className="max-w-md flex items-center justify-center flex-col mx-auto p-6 space-y-4 text-white">
-        <h2>あなたのBookmark</h2>
+      <main className="max-w-md flex items-center justify-center flex-col mx-auto p-6 space-y-4 text-black">
+        <h2 className="font-semibold text-2xl">あなたのBookmark</h2>
+
         <ul>
           {bookmarks?.map((bookmark) => (
             <li key={bookmark.id}>

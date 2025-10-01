@@ -32,24 +32,24 @@ export default function SignInPage() {
 
       {error && <p className="text-red-500">{error}</p>}
 
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form onSubmit={handleSubmit} className="space-y-4 text-gray-700">
         <input
           name="email"
           type="email"
           placeholder="Email"
           required
-          className="w-full rounded-md bg-neutral-900 border border-neutral-700 px-3 py-2"
+          className="w-full rounded-md bg-neutral-100 border border-neutral-700 px-3 py-2"
         />
         <input
           name="password"
           type="password"
           placeholder="Password"
           required
-          className="w-full rounded-md bg-neutral-900 border border-neutral-700 px-3 py-2"
+          className="w-full rounded-md bg-neutral-100 border border-neutral-700 px-3 py-2"
         />
         <button
           type="submit"
-          className="w-full bg-white text-black font-medium rounded-md px-4 py-2 hover:bg-gray-200"
+          className="w-full bg-gray-800 text-white font-medium rounded-md px-4 py-2 hover:bg-gray-900 cursor-pointer"
         >
           Sign In
         </button>
