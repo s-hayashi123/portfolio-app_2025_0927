@@ -7,12 +7,16 @@ import { redirect } from "next/navigation";
 import { Button as ShadcnButton } from "@/components/ui/button";
 import { signOutAction } from "../actions/auth";
 
-export default async function DashboardPage() {
+export default async function DashboardPage({
+  serchParams,
+}: {
+  serchParams: { category?: string };
+}) {
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session?.user) redirect("/");
 
   const { user } = session;
-  const bookmarks = await getBookmarks();
+  const bookmarks = await getBookmarks(serchParams.category);
 
   return (
     <div className="">
@@ -48,7 +52,7 @@ export default async function DashboardPage() {
         <h2 className="font-semibold text-2xl">あなたのBookmark</h2>
 
         <ul>
-          {bookmarks?.map((bookmark) => (
+          {bookmarks.map((bookmark) => (
             <li key={bookmark.id}>
               {bookmark.title}
               <a href={bookmark.url}>{bookmark.url}</a>
