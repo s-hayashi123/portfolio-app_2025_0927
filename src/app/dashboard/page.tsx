@@ -1,22 +1,20 @@
 "use server";
 
 import { auth } from "@/lib/auth";
-import { getBookmarks } from "../actions/bookmarks";
+import { addBookmark, getBookmarks } from "../actions/bookmarks";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { Button as ShadcnButton } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { signOutAction } from "../actions/auth";
 
-export default async function DashboardPage({
-  serchParams,
-}: {
-  serchParams: { category?: string };
-}) {
+export default async function DashboardPage() {
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session?.user) redirect("/");
 
   const { user } = session;
-  const bookmarks = await getBookmarks(serchParams.category);
+  const bookmarks = await getBookmarks();
 
   return (
     <div className="">
@@ -50,12 +48,91 @@ export default async function DashboardPage({
 
       <main className="max-w-md flex items-center justify-center flex-col mx-auto p-6 space-y-4 text-black">
         <h2 className="font-semibold text-2xl">あなたのBookmark</h2>
-
-        <ul>
+        <div>
+          <form action={addBookmark} className="space-y-4">
+            <Label htmlFor="url">URL</Label>
+            <Input
+              id="url"
+              name="url"
+              type="url"
+              placeholder="https://example.com"
+              required
+              className="w-full"
+            />
+            <Label htmlFor="title">タイトル</Label>
+            <Input
+              id="title"
+              name="title"
+              type="text"
+              placeholder="ブックマークのタイトル"
+              required
+              className=""
+            />
+            <Label htmlFor="description">説明</Label>
+            <Input
+              id="description"
+              name="description"
+              type="text"
+              placeholder="ブックマークの説明"
+              className=""
+            />
+            {/* <Label htmlFor="categoryId">カテゴリー</Label>
+            <Input
+              id="categoryId"
+              name="categoryId"
+              type="text"
+              placeholder="カテゴリー"
+              className=""
+            /> */}
+            <ShadcnButton type="submit" className="">
+              追加
+            </ShadcnButton>
+          </form>
+        </div>
+        <ul className="space-y-3 w-full">
           {bookmarks.map((bookmark) => (
-            <li key={bookmark.id}>
-              {bookmark.title}
-              <a href={bookmark.url}>{bookmark.url}</a>
+            <li
+              key={bookmark.id}
+              className="bg-white rounded-lg border border-gray-200 p-4 shadow-sm hover:shadow-md transition-shadow"
+            >
+              <div className="flex items-start justify-between">
+                <div className="flex-1 min-w-0">
+                  <h3 className="text-lg font-semibold text-gray-900 truncate">
+                    {bookmark.title}
+                  </h3>
+                  {bookmark.description && (
+                    <p className="text-gray-600 text-sm mt-1 line-clamp-2">
+                      {bookmark.description}
+                    </p>
+                  )}
+                  <a
+                    href={bookmark.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-600 hover:text-blue-800 text-sm mt-2 inline-flex items-center gap-1"
+                  >
+                    <svg
+                      className="w-4 h-4"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                      />
+                    </svg>
+                    {bookmark.url}
+                  </a>
+                </div>
+                <div className="ml-4 flex-shrink-0">
+                  <div className="text-xs text-gray-400">
+                    {new Date(bookmark.createdAt).toLocaleDateString("ja-JP")}
+                  </div>
+                </div>
+              </div>
             </li>
           ))}
         </ul>
