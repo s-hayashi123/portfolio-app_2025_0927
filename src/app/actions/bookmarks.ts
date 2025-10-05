@@ -50,3 +50,56 @@ export async function addBookmark(formData: FormData) {
   }
   revalidatePath("/dashboard");
 }
+
+export async function deleteBookmark(formData: FormData) {
+  try {
+    const session = await auth.api.getSession({ headers: await headers() });
+    if (!session?.user) throw new Error("認証されていません。");
+
+    const id = formData.get("id") as string;
+    if (!id) throw new Error("ブックマークIDが見つかりません。");
+
+    const _bookmark = await prisma.bookmark.delete({
+      where: {
+        userId: session.user.id,
+        id: id,
+      },
+    });
+
+    revalidatePath("/dashboard");
+  } catch (err) {
+    console.error(err);
+    throw new Error("ブックマークの削除に失敗しました。");
+  }
+}
+
+export async function updateBookmark(formData: FormData) {
+  try {
+    const session = await auth.api.getSession({ headers: await headers() });
+    if (!session?.user) throw new Error("認証されていません。");
+
+    const id = formData.get("id") as string;
+    const url = formData.get("url") as string;
+    const title = formData.get("title") as string;
+    const description = formData.get("description") as string | null;
+
+    if (!url || !title) throw new Error("URLとタイトルは必須です。");
+
+    const _bookmark = await prisma.bookmark.update({
+      where: {
+        userId: session.user.id,
+        id: id,
+      },
+      data: {
+        url,
+        title,
+        description,
+      },
+    });
+
+    revalidatePath("/dashboard");
+  } catch (err) {
+    console.error(err);
+    throw new Error("ブックマークの更新に失敗しました。");
+  }
+}
