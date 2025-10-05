@@ -13,6 +13,16 @@ import { Button as ShadcnButton } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { signOutAction } from "../actions/auth";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { DialogClose } from "@radix-ui/react-dialog";
 
 export default async function DashboardPage() {
   const session = await auth.api.getSession({ headers: await headers() });
@@ -54,7 +64,7 @@ export default async function DashboardPage() {
       <main className="max-w-md flex items-center justify-center flex-col mx-auto p-6 space-y-4 text-black">
         <h2 className="font-semibold text-2xl">あなたのBookmark</h2>
         <div>
-          <form action={addBookmark} className="space-y-4">
+          <form action={addBookmark} className="space-y-3">
             <Label htmlFor="url">URL</Label>
             <Input
               id="url"
@@ -133,6 +143,68 @@ export default async function DashboardPage() {
                         </svg>
                         {bookmark.url}
                       </a>
+                    </div>
+                    <div>
+                      <Dialog>
+                        <DialogTrigger asChild>
+                          <ShadcnButton variant="outline">
+                            Open Dialog
+                          </ShadcnButton>
+                        </DialogTrigger>
+                        <DialogContent className="sm:max-w-[425px]">
+                          <form action={updateBookmark}>
+                            <input
+                              type="hidden"
+                              name="id"
+                              value={bookmark.id}
+                            />
+                            <DialogHeader>
+                              <DialogTitle>ブックマークを編集</DialogTitle>
+                              <DialogDescription>
+                                変更したい内容を入力してください。
+                              </DialogDescription>
+                            </DialogHeader>
+                            <div className="grid gap-4 mt-6">
+                              <div className="grid gap-2">
+                                <Label htmlFor="title">タイトル</Label>
+                                <Input
+                                  id="title"
+                                  name="title"
+                                  defaultValue={bookmark.title}
+                                />
+                              </div>
+                              <div className="grid gap-2">
+                                <Label htmlFor="description">説明</Label>
+                                <Input
+                                  id="description"
+                                  name="description"
+                                  defaultValue={
+                                    bookmark.description || undefined
+                                  }
+                                />
+                              </div>
+                              <div className="grid gap-2">
+                                <Label htmlFor="url">URL</Label>
+                                <Input
+                                  id="url"
+                                  name="url"
+                                  defaultValue={bookmark.url}
+                                />
+                              </div>
+                            </div>
+                            <DialogFooter className="mt-8">
+                              <DialogClose asChild>
+                                <ShadcnButton variant="outline">
+                                  キャンセル
+                                </ShadcnButton>
+                              </DialogClose>
+                              <DialogClose asChild>
+                                <ShadcnButton type="submit">保存</ShadcnButton>
+                              </DialogClose>
+                            </DialogFooter>
+                          </form>
+                        </DialogContent>
+                      </Dialog>
                     </div>
                     <div className="ml-4 flex-shrink-0">
                       <form action={deleteBookmark} className="inline-block">
